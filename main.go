@@ -2,14 +2,14 @@ package main
 
 import (
 	"fmt"
+	"github.com/fvbock/endless"
 	"github.com/gin-gonic/gin"
-	"helm-dashboard/helmapi"
+	"helm-dashboard/helmapi/release"
 	"time"
 )
 
 func init() {
 	gin.DisableConsoleColor()
-	helmapi.Test()
 }
 
 func configMiddleware(r *gin.Engine) {
@@ -32,15 +32,13 @@ func configMiddleware(r *gin.Engine) {
 }
 
 func main() {
-	r := gin.Default()
-	configMiddleware(r)
+	router := gin.Default()
+	configMiddleware(router)
+	v1 := router.Group("/v1")
 
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
+	// v1Release handlers
+	v1Release := v1.Group("/release")
+	v1Release.GET("/list", release.List)
 
-	})
-	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
-
+	endless.ListenAndServe(":80", router)
 }
