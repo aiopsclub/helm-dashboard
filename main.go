@@ -3,19 +3,19 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"helm-dashboard/helmapi"
 	"time"
 )
 
+func init() {
+	gin.DisableConsoleColor()
+	helmapi.Test()
+}
+
 func configMiddleware(r *gin.Engine) {
 	r.Use(gin.Logger())
-
-	// Recovery middleware recovers from any panics and writes a 500 if there was one.
 	r.Use(gin.Recovery())
-
-	// custom log format
 	r.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
-
-		// your custom format
 		return fmt.Sprintf("%s - [%s] \"%s %s %s %d %s \"%s\" %s\"\n",
 			param.ClientIP,
 			param.TimeStamp.Format(time.RFC1123),
@@ -29,12 +29,6 @@ func configMiddleware(r *gin.Engine) {
 		)
 
 	}))
-
-}
-
-func init() {
-	gin.DisableConsoleColor()
-
 }
 
 func main() {
