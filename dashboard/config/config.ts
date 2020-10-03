@@ -40,6 +40,43 @@ export default defineConfig({
       ],
     },
     {
+      path: '/helm',
+      name: 'helm',
+      icon: 'crown',
+      routes: [
+        {
+          name: 'release',
+          path: '/helm/release',
+          component: './Welcome',
+        },
+      ],
+    },
+    {
+      name: '错误页',
+      icon: 'smile',
+      path: '/exception',
+      routes: [
+        {
+          name: '403',
+          icon: 'smile',
+          path: '/exception/403',
+          component: './Exception403',
+        },
+        {
+          name: '404',
+          icon: 'smile',
+          path: '/exception/404',
+          component: './Exception404',
+        },
+        {
+          name: '500',
+          icon: 'smile',
+          path: '/exception/500',
+          component: './Exception500',
+        },
+      ],
+    },
+    {
       path: '/welcome',
       name: 'welcome',
       icon: 'smile',
@@ -59,12 +96,6 @@ export default defineConfig({
           component: './Welcome',
         },
       ],
-    },
-    {
-      name: '标准列表',
-      icon: 'smile',
-      path: '/listbasiclist',
-      component: './ListBasicListTwo',
     },
     {
       name: '标准列表',
@@ -135,24 +166,6 @@ export default defineConfig({
       icon: 'smile',
       path: '/dashboardworkplace',
       component: './DashboardWorkplace',
-    },
-    {
-      name: '403',
-      icon: 'smile',
-      path: '/exception403',
-      component: './Exception403',
-    },
-    {
-      name: '404',
-      icon: 'smile',
-      path: '/exception404',
-      component: './Exception404',
-    },
-    {
-      name: '500',
-      icon: 'smile',
-      path: '/exception500',
-      component: './Exception500',
     },
     {
       name: '高级表单',
