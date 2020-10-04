@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/fvbock/endless"
 	"github.com/gin-gonic/gin"
+	"helm-dashboard/account"
 	"helm-dashboard/helmapi/release"
 	"time"
 )
@@ -34,11 +35,15 @@ func configMiddleware(r *gin.Engine) {
 func main() {
 	router := gin.Default()
 	configMiddleware(router)
-	v1 := router.Group("/v1")
+	v1 := router.Group("/api/v1")
 
 	// v1Release handlers
 	v1Release := v1.Group("/release")
 	v1Release.GET("/list", release.List)
+
+	// v1Account handlers
+	v1Account := v1.Group("/account")
+	v1Account.POST("/login", account.Login)
 
 	endless.ListenAndServe(":80", router)
 }
