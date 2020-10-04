@@ -5,6 +5,7 @@ import (
 	"github.com/fvbock/endless"
 	"github.com/gin-gonic/gin"
 	"helm-dashboard/account"
+	"helm-dashboard/auth"
 	"helm-dashboard/helmapi/release"
 	"time"
 )
@@ -35,6 +36,7 @@ func configMiddleware(r *gin.Engine) {
 func main() {
 	router := gin.Default()
 	configMiddleware(router)
+	fmt.Println(auth.Enforcer.GetAllSubjects())
 	v1 := router.Group("/api/v1")
 
 	// v1Release handlers
