@@ -20,7 +20,6 @@ func init() {
 		os.Exit(1)
 	}
 	dbPath := path.Join(cwd, "db/system.db")
-	fmt.Println(dbPath)
 
 	adapter, err := xormadapter.NewAdapter("sqlite3", dbPath)
 
@@ -30,7 +29,6 @@ func init() {
 	}
 
 	casbinConfPath := path.Join(cwd, "conf/basic_with_root_model.conf")
-	fmt.Println(casbinConfPath)
 	Enforcer, err = casbin.NewEnforcer(casbinConfPath, adapter)
 
 	if err != nil {

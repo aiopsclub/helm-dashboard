@@ -13,4 +13,5 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.0
 	gorm.io/driver/sqlserver v0.2.4
 	helm.sh/helm/v3 v3.3.4
+	xorm.io/xorm v0.8.0
 )

@@ -5,8 +5,9 @@ import (
 	"github.com/fvbock/endless"
 	"github.com/gin-gonic/gin"
 	"helm-dashboard/account"
-	"helm-dashboard/auth"
+	_ "helm-dashboard/auth"
 	"helm-dashboard/helmapi/release"
+	_ "helm-dashboard/model"
 	"time"
 )
 
@@ -36,7 +37,6 @@ func configMiddleware(r *gin.Engine) {
 func main() {
 	router := gin.Default()
 	configMiddleware(router)
-	fmt.Println(auth.Enforcer.GetAllSubjects())
 	v1 := router.Group("/api/v1")
 
 	// v1Release handlers
@@ -46,6 +46,10 @@ func main() {
 	// v1Account handlers
 	v1Account := v1.Group("/account")
 	v1Account.POST("/login", account.Login)
+
+	// v1User handlers
+	v1User := v1.Group("/user")
+	v1User.POST("/create", account.Create)
 
 	endless.ListenAndServe(":80", router)
 }
