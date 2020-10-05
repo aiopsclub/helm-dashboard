@@ -12,13 +12,13 @@ func RequireJWT(c *gin.Context) {
 	prefix := "Bearer "
 	if !strings.HasPrefix(authHeader, prefix) {
 		// Incorrect Authorization header format.
-		c.Abort()
+		c.AbortWithStatusJSON(401, gin.H{"code": 10009, "msg": "Auth Header not found!"})
 		return
 	}
 	token := authHeader[strings.Index(authHeader, prefix)+len(prefix):]
 	if token == "" {
 		// JWT not found.
-		c.Abort()
+		c.AbortWithStatusJSON(401, gin.H{"code": 10008, "msg": "token can't be nil!"})
 		return
 
 	}
@@ -26,7 +26,7 @@ func RequireJWT(c *gin.Context) {
 	var payload jwt.Payload
 	_, err := jwt.Verify([]byte(token), jwthelper.JwtKey, &payload)
 	if err != nil {
-		c.Abort()
+		c.AbortWithStatusJSON(401, gin.H{"code": 10010, "msg": err.Error()})
 		return
 
 	}
