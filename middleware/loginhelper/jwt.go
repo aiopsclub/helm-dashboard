@@ -30,6 +30,7 @@ func RequireJWT(c *gin.Context) {
 		return
 
 	}
+	c.Set("username", payload.Subject)
 	c.Next()
 
 }
