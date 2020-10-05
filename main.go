@@ -5,7 +5,7 @@ import (
 	"github.com/fvbock/endless"
 	"github.com/gin-gonic/gin"
 	"helm-dashboard/account"
-	_ "helm-dashboard/auth"
+	"helm-dashboard/auth"
 	"helm-dashboard/helmapi/release"
 	_ "helm-dashboard/model"
 	"time"
@@ -16,8 +16,6 @@ func init() {
 }
 
 func configMiddleware(r *gin.Engine) {
-	r.Use(gin.Logger())
-	r.Use(gin.Recovery())
 	r.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
 		return fmt.Sprintf("%s - [%s] \"%s %s %s %d %s \"%s\" %s\"\n",
 			param.ClientIP,
@@ -41,7 +39,7 @@ func main() {
 
 	// v1Release handlers
 	v1Release := v1.Group("/release")
-	v1Release.GET("/list", release.List)
+	v1Release.GET("/", release.List)
 
 	// v1Account handlers
 	v1Account := v1.Group("/account")
@@ -49,7 +47,13 @@ func main() {
 
 	// v1User handlers
 	v1User := v1.Group("/user")
-	v1User.POST("/create", account.Create)
+	v1User.POST("/", account.Create)
+
+	// v1Policy handlers
+	v1Policy := v1.Group("/policy")
+	v1Policy.POST("/", auth.PolicyAdd)
+	v1Policy.GET("/", auth.PolicyList)
+	v1Policy.DELETE("/", auth.PolicyRemove)
 
 	endless.ListenAndServe(":80", router)
 }

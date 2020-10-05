@@ -2,14 +2,13 @@ package account
 
 import (
 	"helm-dashboard/internal/encrypthelper"
+	"helm-dashboard/internal/jwthelper"
 	"helm-dashboard/model"
 	"time"
 
 	"github.com/gbrlsnchs/jwt/v3"
 	"github.com/gin-gonic/gin"
 )
-
-var jwtKey = jwt.NewHS256([]byte("helmdashboard"))
 
 func Login(c *gin.Context) {
 	username := c.PostForm("username")
@@ -39,7 +38,7 @@ func Login(c *gin.Context) {
 			Subject:        username,
 			ExpirationTime: jwt.NumericDate(time.Now().Add(time.Hour)),
 		}
-		token, err := jwt.Sign(payload, jwtKey)
+		token, err := jwt.Sign(payload, jwthelper.JwtKey)
 		if err != nil {
 			c.JSON(401, gin.H{
 				"code": "10002",
