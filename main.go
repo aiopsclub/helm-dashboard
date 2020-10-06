@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"helm-dashboard/account"
 	"helm-dashboard/auth"
+	"helm-dashboard/helmapi/history"
 	"helm-dashboard/helmapi/release"
 	"helm-dashboard/middleware/loginhelper"
 	"helm-dashboard/middleware/permissionvalidation"
@@ -43,6 +44,10 @@ func main() {
 	v1Release := v1.Group("/release", loginhelper.RequireJWT)
 	v1Release.GET("/", release.List)
 
+	// v1ReleaseHistory handlers
+	v1ReleaseHistory := v1.Group("/releasehistory", loginhelper.RequireJWT)
+	v1ReleaseHistory.GET("/", permissionvalidation.Policy("release", "read"), history.List)
+
 	// v1Account handlers
 	v1Account := v1.Group("/account")
 	v1Account.POST("/login", account.Login)
@@ -53,9 +58,9 @@ func main() {
 
 	// v1Policy handlers
 	v1Policy := v1.Group("/policy", loginhelper.RequireJWT)
-	v1Policy.GET("/", permissionvalidation.Policy("read"), auth.PolicyList)
-	v1Policy.POST("/", permissionvalidation.Policy("write"), auth.PolicyAdd)
-	v1Policy.DELETE("/", permissionvalidation.Policy("write"), auth.PolicyRemove)
+	v1Policy.GET("/", permissionvalidation.Policy("policy", "read"), auth.PolicyList)
+	v1Policy.POST("/", permissionvalidation.Policy("policy", "write"), auth.PolicyAdd)
+	v1Policy.DELETE("/", permissionvalidation.Policy("policy", "write"), auth.PolicyRemove)
 
 	endless.ListenAndServe(":80", router)
 }

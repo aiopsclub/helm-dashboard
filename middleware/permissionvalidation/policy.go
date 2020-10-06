@@ -6,10 +6,24 @@ import (
 	"helm-dashboard/auth"
 )
 
-func Policy(policyType string) gin.HandlerFunc {
+func Policy(objectType, policyType string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		sub := c.GetString("username")
-		has, err := auth.Enforcer.Enforce(sub, "policy", policyType)
+
+		switch objectType {
+		case "policy":
+		case "release":
+			objectType = c.Query("releasename")
+			if len(objectType) == 0 {
+				c.AbortWithStatusJSON(500, gin.H{
+					"code": 10015,
+					"msg":  "releasename can't be nil!",
+				})
+				return
+			}
+		default:
+		}
+		has, err := auth.Enforcer.Enforce(sub, objectType, policyType)
 		if err != nil {
 			c.AbortWithStatusJSON(500, gin.H{
 				"code": 10013,
@@ -23,7 +37,7 @@ func Policy(policyType string) gin.HandlerFunc {
 		} else {
 			c.AbortWithStatusJSON(403, gin.H{
 				"code": 10012,
-				"msg":  fmt.Sprintf("You have not permission to %s policy!", policyType),
+				"msg":  fmt.Sprintf("You have not permission to %s %s!", policyType, objectType),
 			})
 			return
 		}
