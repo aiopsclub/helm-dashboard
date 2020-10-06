@@ -7,6 +7,8 @@ import (
 	"helm-dashboard/account"
 	"helm-dashboard/auth"
 	"helm-dashboard/helmapi/release"
+	"helm-dashboard/middleware/loginhelper"
+	"helm-dashboard/middleware/permissionvalidation"
 	_ "helm-dashboard/model"
 	"time"
 )
@@ -38,7 +40,7 @@ func main() {
 	v1 := router.Group("/api/v1")
 
 	// v1Release handlers
-	v1Release := v1.Group("/release")
+	v1Release := v1.Group("/release", loginhelper.RequireJWT)
 	v1Release.GET("/", release.List)
 
 	// v1Account handlers
@@ -50,10 +52,10 @@ func main() {
 	v1User.POST("/", account.Create)
 
 	// v1Policy handlers
-	v1Policy := v1.Group("/policy")
-	v1Policy.POST("/", auth.PolicyAdd)
-	v1Policy.GET("/", auth.PolicyList)
-	v1Policy.DELETE("/", auth.PolicyRemove)
+	v1Policy := v1.Group("/policy", loginhelper.RequireJWT)
+	v1Policy.GET("/", permissionvalidation.Policy("read"), auth.PolicyList)
+	v1Policy.POST("/", permissionvalidation.Policy("write"), auth.PolicyAdd)
+	v1Policy.DELETE("/", permissionvalidation.Policy("write"), auth.PolicyRemove)
 
 	endless.ListenAndServe(":80", router)
 }

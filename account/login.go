@@ -49,7 +49,7 @@ func Login(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"code":        "0",
 			"msg":         "create token successfully!",
-			"accesstoken": token,
+			"accesstoken": string(token),
 		})
 
 	} else {

@@ -39,7 +39,10 @@ func init() {
 }
 
 func PolicyAdd(c *gin.Context) {
-	_, err := Enforcer.AddPolicy("a", "b", "c")
+	sub := c.PostForm("sub")
+	obj := c.PostForm("obj")
+	act := c.PostForm("act")
+	_, err := Enforcer.AddPolicy(sub, act, obj)
 	if err != nil {
 		c.JSON(500, gin.H{
 			"code": "10003",
@@ -54,7 +57,10 @@ func PolicyAdd(c *gin.Context) {
 }
 
 func PolicyRemove(c *gin.Context) {
-	_, err := Enforcer.RemovePolicy("a", "b", "c")
+	sub := c.PostForm("sub")
+	obj := c.PostForm("obj")
+	act := c.PostForm("act")
+	_, err := Enforcer.RemovePolicy(sub, obj, act)
 	if err != nil {
 		c.JSON(500, gin.H{
 			"code": "10004",
