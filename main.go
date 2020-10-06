@@ -45,7 +45,7 @@ func main() {
 	v1Release.GET("/", release.List)
 
 	// v1ReleaseHistory handlers
-	v1ReleaseHistory := v1.Group("/releasehistory", loginhelper.RequireJWT)
+	v1ReleaseHistory := v1.Group("/history", loginhelper.RequireJWT)
 	v1ReleaseHistory.GET("/", permissionvalidation.Policy("release", "read"), history.List)
 
 	// v1Account handlers
